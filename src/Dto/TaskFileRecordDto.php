@@ -4,6 +4,9 @@ namespace Lukimoore\SgApp\Dto;
 
 class TaskFileRecordDto
 {
+    /**
+     * @param array<string, mixed> $rawData
+     */
     public function __construct(
         private readonly int $number,
         private readonly string $description,
@@ -33,6 +36,9 @@ class TaskFileRecordDto
         return $this->phone;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getRawData(): array
     {
         return $this->rawData;

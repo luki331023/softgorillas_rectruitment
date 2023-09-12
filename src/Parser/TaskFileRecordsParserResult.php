@@ -3,6 +3,7 @@
 namespace Lukimoore\SgApp\Parser;
 
 use Lukimoore\SgApp\Dto\TaskFileRecordDto;
+use Lukimoore\SgApp\Enum\TaskTypeEnum;
 use Lukimoore\SgApp\Model\Task;
 
 class TaskFileRecordsParserResult
@@ -34,6 +35,23 @@ class TaskFileRecordsParserResult
     public function getProcessedTasks(): array
     {
         return $this->processedTasks;
+    }
+
+    /**
+     * @return array<string, Task[]>
+     */
+    public function getProcessedTasksByType(): array
+    {
+        $groupByType = [];
+
+        foreach ($this->getProcessedTasks() as $task) {
+            if(!isset($groupByType[$task->getType()->value])) {
+                $groupByType[$task->getType()->value] = [];
+            }
+            $groupByType[$task->getType()->value][] = $task;
+        }
+
+        return $groupByType;
     }
 
     /**

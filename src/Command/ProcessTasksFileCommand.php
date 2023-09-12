@@ -3,6 +3,7 @@
 namespace Lukimoore\SgApp\Command;
 
 use League\Flysystem\FilesystemOperator;
+use Lukimoore\SgApp\Parser\FailedRecord;
 use Lukimoore\SgApp\Parser\TaskFileRecordsParser;
 use Lukimoore\SgApp\Parser\TaskFileRecordsParserResult;
 use Symfony\Component\Console\Command\Command;
@@ -47,23 +48,15 @@ class ProcessTasksFileCommand extends Command
         );
 
         $this->outputResultToConsole($result, $output);
+        $this->outputResultAsFiles($result);
 
         return Command::SUCCESS;
     }
 
     private function outputResultToConsole(TaskFileRecordsParserResult $result, OutputInterface $output): void
     {
-        $countByType = [];
-
-        foreach ($result->getProcessedTasks() as $task) {
-            if(!isset($countByType[$task->getType()->value])) {
-                $countByType[$task->getType()->value] = 0;
-            }
-            $countByType[$task->getType()->value]++;
-        }
-
-        foreach ($countByType as $type => $count) {
-            $output->writeln(sprintf('Processed %d task with type %s', $count, $type));
+        foreach ($result->getProcessedTasksByType() as $type => $tasks) {
+            $output->writeln(sprintf('Processed %d task with type %s', count($tasks), $type));
         }
 
         $output->writeln('----------------------');
@@ -71,6 +64,27 @@ class ProcessTasksFileCommand extends Command
 
         foreach ($result->getFailedRecords() as $record) {
             $output->writeln(sprintf('%s : %s', $record->getRecord()->getNumber(), $record->getCause()));
+        }
+    }
+
+    private function outputResultAsFiles(TaskFileRecordsParserResult $result): void
+    {
+        foreach ($result->getProcessedTasksByType() as $type => $tasks) {
+            $this->localFilesystem->write(
+                sprintf('output_%s.json', $type),
+                $this->serializer->serialize($tasks, JsonEncoder::FORMAT)
+            );
+        }
+
+        if (count($result->getFailedRecords()))
+        {
+            $this->localFilesystem->write(
+                'failed_records.json',
+                $this->serializer->serialize(
+                    array_map(fn (FailedRecord $record) => $record->getRecord()->getRawData(), $result->getFailedRecords()),
+                    JsonEncoder::FORMAT
+                )
+            );
         }
     }
 }
