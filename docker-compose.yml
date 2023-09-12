@@ -1,0 +1,15 @@
+version: '3.7'
+name: sg-core
+services:
+  core:
+    image: webdevops/php-dev:8.1
+    working_dir: /app
+    environment:
+      PHP_DATE_TIMEZONE: Europe/Warsaw
+      PHP_MEMORY_LIMIT: 1024M
+      XDEBUG_MODE: debug
+      XDEBUG_CLIENT_HOST: host.docker.internal
+      XDEBUG_IDE_KEY: PHPSTORM
+      PHP_IDE_CONFIG: 'serverName=sg-lukasz'
+    volumes:
+      - ./:/app

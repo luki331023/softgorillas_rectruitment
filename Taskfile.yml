@@ -1,0 +1,15 @@
+version: '3'
+
+tasks:
+  start:
+    cmds:
+      - docker compose up -d
+        
+  stop:
+    cmds:
+      - docker compose stop
+
+  enter-php:
+    cmds:
+      - cmd: docker compose exec -it --user application core bash
+        ignore_error: true
