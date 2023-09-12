@@ -3,9 +3,18 @@ services:
         autowire: true
         autoconfigure: true
 
+    _instanceof:
+        Lukimoore\SgApp\TaskParser\TaskParserInterface:
+            tags:
+                - { name: sg.task_parser }
+
     Lukimoore\SgApp\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    Lukimoore\SgApp\Parser\TaskFileRecordsParser:
+        arguments:
+            $taskParsers: !tagged_iterator sg.task_parser

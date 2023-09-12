@@ -8,7 +8,8 @@ class TaskFileRecordDto
         private readonly int $number,
         private readonly string $description,
         private readonly ?\DateTimeInterface $dueDate,
-        private readonly ?string $phone
+        private readonly ?string $phone,
+        private readonly array $rawData
     ) {
     }
 
@@ -30,5 +31,10 @@ class TaskFileRecordDto
     public function getPhone(): ?string
     {
         return $this->phone;
+    }
+
+    public function getRawData(): array
+    {
+        return $this->rawData;
     }
 }

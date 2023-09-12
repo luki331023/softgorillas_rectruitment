@@ -4,6 +4,7 @@ namespace Lukimoore\SgApp\Command;
 
 use League\Flysystem\FilesystemOperator;
 use Lukimoore\SgApp\Parser\TaskFileRecordsParser;
+use Lukimoore\SgApp\Parser\TaskFileRecordsParserResult;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,8 +46,31 @@ class ProcessTasksFileCommand extends Command
             )
         );
 
-        // print result details
+        $this->outputResultToConsole($result, $output);
 
         return Command::SUCCESS;
+    }
+
+    private function outputResultToConsole(TaskFileRecordsParserResult $result, OutputInterface $output): void
+    {
+        $countByType = [];
+
+        foreach ($result->getProcessedTasks() as $task) {
+            if(!isset($countByType[$task->getType()->value])) {
+                $countByType[$task->getType()->value] = 0;
+            }
+            $countByType[$task->getType()->value]++;
+        }
+
+        foreach ($countByType as $type => $count) {
+            $output->writeln(sprintf('Processed %d task with type %s', $count, $type));
+        }
+
+        $output->writeln('----------------------');
+        $output->writeln('Failed records:');
+
+        foreach ($result->getFailedRecords() as $record) {
+            $output->writeln(sprintf('%s : %s', $record->getRecord()->getNumber(), $record->getCause()));
+        }
     }
 }
