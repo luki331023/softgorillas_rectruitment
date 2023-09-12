@@ -1,0 +1,9 @@
+oneup_flysystem:
+    adapters:
+        local_data_adapter:
+            local:
+                location: '%kernel.project_dir%/data'
+    filesystems:
+        local_filesystem:
+            adapter: local_data_adapter
+            alias: League\Flysystem\Filesystem

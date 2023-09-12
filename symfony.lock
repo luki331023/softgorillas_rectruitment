@@ -1,4 +1,28 @@
 {
+    "oneup/flysystem-bundle": {
+        "version": "4.9",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "4.0",
+            "ref": "3ae1b83985e89138f5443bbc2d9b8c074b497d49"
+        },
+        "files": [
+            "config/packages/oneup_flysystem.yaml"
+        ]
+    },
+    "phpstan/phpstan": {
+        "version": "1.10",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "f10b8054de1a94a3b9e8806a6453fd5c98491c44"
+        },
+        "files": [
+            "phpstan.dist.neon"
+        ]
+    },
     "symfony/console": {
         "version": "6.3",
         "recipe": {
